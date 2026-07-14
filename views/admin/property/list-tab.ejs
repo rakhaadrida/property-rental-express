@@ -1,0 +1,62 @@
+<div class="card shadow mb-4">
+    <div class="card-body mt-2">
+        <div class="table-responsive">
+            <table
+                class="table table-bordered"
+                id="dataTable"
+                width="100%"
+                cellspacing="0"
+            >
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Price ($)</th>
+                        <th>Country</th>
+                        <th>City</th>
+                        <th>Popular</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% property.forEach((item, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item.name %></td>
+                            <td><%= item.price %></td>
+                            <td><%= item.country %></td>
+                            <td><%= item.city %></td>
+                            <td><%= item.isPopular ? `Yes` : `No` %></td>
+                            <td>
+                                <button 
+                                    type="button" 
+                                    data-toggle="modal" 
+                                    data-target="#editBankModal"
+                                    data-id="<%= item._id %>"
+                                    data-name="<%= item.name %>" 
+                                    data-account-name="<%= item.accountName %>" 
+                                    data-account-number="<%= item.accountNumber %>" 
+                                    class="btn btn-sm btn-info"
+                                    id="editBankButton"
+                                >
+                                    Edit
+                                </button>
+                                <form action="/admin/banks/<%= item._id %>?_method=DELETE" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
+                                <a href="/admin/properties/images/<%= item._id %>" class="btn btn-sm btn-primary">
+                                    Images
+                                </a>
+                                <button type="button" class="btn btn-sm btn-success">
+                                    Detail
+                                </button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

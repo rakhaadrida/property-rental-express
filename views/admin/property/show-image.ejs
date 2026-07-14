@@ -1,0 +1,23 @@
+<h1 class="h3 mb-4 text-gray-800">Property Images - <%= property.name %></h1>
+
+<div class="row">
+    <% property.propertyImageIds.forEach((item, index) => { %>
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <img
+                        src="/<%= item.url %>"
+                        alt="Images"
+                        style="width: 100%; display: block;"
+                    />
+                </div>
+            </div>
+        </div>
+    <% }); %>
+</div>
+
+<div class="row justify-content-center">
+    <a href="/admin/properties" class="btn btn-primary justify-content-center col-3 mt-2">
+        Back to List
+    </a>
+</div>

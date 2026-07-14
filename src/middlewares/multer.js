@@ -17,11 +17,11 @@ const storageMultiple = multer.diskStorage({
 
 const uploadMultiple = multer({
     storage: storageMultiple,
-    limits: { fileSize: 1000000 },
+    limits: { fileSize: 10000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     },
-}).array("image", 12);
+}).array("images", 12);
 
 const storage = multer.diskStorage({
     destination: "public/images",

@@ -24,6 +24,11 @@ const propertySchema = new Schema({
     },
     isPopular: {
         type: Boolean,
+        default: false,
+    },
+    categoryId: {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
     },
     propertyImageIds: [
         {

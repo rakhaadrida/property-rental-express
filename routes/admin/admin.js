@@ -21,6 +21,9 @@ router.put("/banks/:id", upload, bankController.updateBank);
 router.delete("/banks/:id", bankController.deleteBank);
 
 router.get("/properties", propertyController.property);
+router.post("/properties", uploadMultiple, propertyController.createProperty);
+router.get("/properties/images/:id", propertyController.showImage);
+
 router.get("/bookings", bookingController.booking);
 
 module.exports = router;

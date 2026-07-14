@@ -1,28 +1,58 @@
 <h1 class="h3 mb-4 text-gray-800">Master Data Property</h1>
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">List Property</h6>
+
+<%- include('../partials/alert.ejs') %>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button
+            class="nav-link active"
+            id="list-tab"
+            data-toggle="tab"
+            data-target="#list"
+            type="button"
+            role="tab"
+            aria-controls="list"
+            aria-selected="true"
+        >
+            List
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button
+            class="nav-link"
+            id="create-new-tab"
+            data-toggle="tab"
+            data-target="#create-new"
+            type="button"
+            role="tab"
+            aria-controls="create-new"
+            aria-selected="false"
+        >
+            Create New
+        </button>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div
+        class="tab-pane fade show active"
+        id="list"
+        role="tabpanel"
+        aria-labelledby="list-tab"
+    >
+        <%- include('list-tab') %>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table
-                class="table table-bordered"
-                id="dataTable"
-                width="100%"
-                cellspacing="0"
-            >
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Country</th>
-                        <th>City</th>
-                        <th>Popular</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
+    <div
+        class="tab-pane fade"
+        id="create-new"
+        role="tabpanel"
+        aria-labelledby="create-new-tab"
+    >
+        <%- include('create-new-tab') %>
     </div>
 </div>
+
+<%- include('../partials/script.ejs') %>
+
+<script>
+    CKEDITOR.replace("description");
+</script>

@@ -1,0 +1,78 @@
+<div class="card shadow mb-4">
+    <div class="card-body mt-2">
+        <form
+            action="/admin/properties"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    placeholder="Enter the name here."
+                    required
+                />
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    id="price"
+                    name="price"
+                    placeholder="Enter the price here."
+                    required
+                />
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="city"
+                    name="city"
+                    placeholder="Enter the city here."
+                    required
+                />
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select class="form-control" id="category" name="categoryId" required>
+                    <% category.forEach((item, index) => { %>
+                        <option value="<%= item.id %>"><%= item.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                    class="form-control"
+                    id="description"
+                    name="description"
+                    required
+                ></textarea>
+            </div>
+            <div class="form-group">
+                <label for="images">Image</label>
+                <input
+                    type="file"
+                    class="form-control"
+                    id="images"
+                    name="images"
+                    aria-describedby="imagesHelp"
+                    multiple
+                    required
+                />
+                <small id="imagesHelp" class="form-text text-muted">
+                    Upload the image here (PNG, JPG, JPEG).
+                </small>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Save
+            </button>
+        </form>
+    </div>
+</div>
