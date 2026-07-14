@@ -1,0 +1,182 @@
+<h1 class="h3 mb-4 text-gray-800">Master Data Category</h1>
+
+<%- include('../partials/alert.ejs') %>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#addCategoryModal"
+        >
+            Add New Category
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table
+                class="table table-bordered"
+                id="dataTable"
+                width="100%"
+                cellspacing="0"
+            >
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% category.forEach((item, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item.name %></td>
+                            <td>
+                                <button 
+                                    type="button" 
+                                    data-toggle="modal" 
+                                    data-target="#editCategoryModal"
+                                    data-id="<%= item._id %>"
+                                    data-name="<%= item.name %>" 
+                                    class="btn btn-sm btn-info"
+                                    id="editCategoryButton"
+                                >
+                                    Edit
+                                </button>
+                                <form action="/admin/categories/<%= item._id %>?_method=DELETE" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="addCategoryModal"
+        tabindex="-1"
+        aria-labelledby="addCategoryModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">
+                        Add New Category
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/admin/categories" method="POST">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                aria-describedby="nameHelp"
+                            />
+                            <small id="nameHelp" class="form-text text-muted">
+                                Enter the category name here.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="editCategoryModal"
+        tabindex="-1"
+        aria-labelledby="editCategoryModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCategoryModalLabel">
+                        Edit Category
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="POST">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                aria-describedby="nameHelp"
+                            />
+                            <small id="nameHelp" class="form-text text-muted">
+                                Enter the category name here.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/script.ejs') %>
+
+<script>
+    $('#dataTable').on('click', '#editCategoryButton', function () {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+
+        $('#editCategoryModal #name').val(name);
+        $('#editCategoryModal form').attr('action', `/admin/categories/${id}?_method=PUT`);
+    });
+</script>

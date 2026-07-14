@@ -1,0 +1,271 @@
+<h1 class="h3 mb-4 text-gray-800">Master Data Bank</h1>
+
+<%- include('../partials/alert.ejs') %>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#addBankModal"
+        >
+            Add New Bank
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table
+                class="table table-bordered"
+                id="dataTable"
+                width="100%"
+                cellspacing="0"
+            >
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Account Name</th>
+                        <th>Account Number</th>
+                        <th>Logo</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% bank.forEach((item, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item.name %></td>
+                            <td><%= item.accountName %></td>
+                            <td><%= item.accountNumber %></td>
+                            <td>
+                                <% if (item.logo) { %>
+                                    <img
+                                        src="/<%= item.logo %>"
+                                        alt="<%= item.name %> Logo"
+                                        style="width: 60px; height: auto;"
+                                    />
+                                <% } else { %>
+                                    No Logo
+                                <% } %>
+                            </td>
+                            <td>
+                                <button 
+                                    type="button" 
+                                    data-toggle="modal" 
+                                    data-target="#editBankModal"
+                                    data-id="<%= item._id %>"
+                                    data-name="<%= item.name %>" 
+                                    data-account-name="<%= item.accountName %>" 
+                                    data-account-number="<%= item.accountNumber %>" 
+                                    class="btn btn-sm btn-info"
+                                    id="editBankButton"
+                                >
+                                    Edit
+                                </button>
+                                <form action="/admin/banks/<%= item._id %>?_method=DELETE" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="addBankModal"
+        tabindex="-1"
+        aria-labelledby="addBankModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBankModalLabel">
+                        Add New Bank
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form
+                    action="/admin/banks"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                placeholder="Enter the name here."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="accountNumber">Account Number</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="accountNumber"
+                                name="accountNumber"
+                                placeholder="Enter the account number here."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="accountName">Account Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="accountName"
+                                name="accountName"
+                                placeholder="Enter the account name here."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="logo">Logo</label>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="logo"
+                                name="logo"
+                                aria-describedby="logoHelp"
+                            />
+                            <small id="logoHelp" class="form-text text-muted">
+                                Upload the logo here (PNG, JPG, JPEG).
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="editBankModal"
+        tabindex="-1"
+        aria-labelledby="editBankModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBankModalLabel">
+                        Edit Bank
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                placeholder="Enter the name here."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="accountNumber">Account Number</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="accountNumber"
+                                name="accountNumber"
+                                placeholder="Enter the account number here."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="accountName">Account Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="accountName"
+                                name="accountName"
+                                placeholder="Enter the account name here."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="logo">Logo</label>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="logo"
+                                name="logo"
+                                aria-describedby="logoHelp"
+                            />
+                            <small id="logoHelp" class="form-text text-muted">
+                                Upload the logo here (PNG, JPG, JPEG).
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/script.ejs') %>
+
+<script>
+    $('#dataTable').on('click', '#editBankButton', function () {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const accountNumber = $(this).data('accountNumber');
+        const accountName = $(this).data('accountName');
+
+        $('#editBankModal #name').val(name);
+        $('#editBankModal #accountNumber').val(accountNumber);
+        $('#editBankModal #accountName').val(accountName);
+        $('#editBankModal form').attr('action', `/admin/banks/${id}?_method=PUT`);
+    });
+</script>
