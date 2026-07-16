@@ -38,8 +38,16 @@ const upload = multer({
     },
 }).single("logo");
 
+const uploadIcon = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 },
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    },
+}).single("icon");
+
 function checkFileType(file, cb) {
-    const fileTypes = /jpeg|jpg|png|gif/;
+    const fileTypes = /jpeg|jpg|png|gif|svg/;
     const extName = fileTypes.test(
         path.extname(file.originalname).toLowerCase(),
     );
@@ -52,4 +60,4 @@ function checkFileType(file, cb) {
     }
 }
 
-module.exports = { uploadMultiple, upload };
+module.exports = { uploadMultiple, upload, uploadIcon };

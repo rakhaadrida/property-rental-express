@@ -6,17 +6,9 @@ const featureSchema = new Schema({
         type: String,
         required: true,
     },
-    qty: {
-        type: Number,
+    icon: {
+        type: String,
         required: true,
-    },
-    imageUrl: {
-        tye: String,
-        required: true,
-    },
-    propertyId: {
-        type: Schema.Types.ObjectId,
-        ref: "Property",
     },
 });
 

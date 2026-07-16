@@ -36,12 +36,6 @@ const propertySchema = new Schema({
             ref: "PropertyImage",
         },
     ],
-    featureIds: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Feature",
-        },
-    ],
     activityIds: [
         {
             type: Schema.Types.ObjectId,
