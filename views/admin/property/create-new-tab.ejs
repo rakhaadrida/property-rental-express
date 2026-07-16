@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label for="category">Category</label>
                 <select class="form-control" id="category" name="categoryId" required>
-                    <% category.forEach((item, index) => { %>
+                    <% categories.forEach((item, index) => { %>
                         <option value="<%= item.id %>"><%= item.name %></option>
                     <% }); %>
                 </select>
@@ -70,7 +70,29 @@
                     Upload the image here (PNG, JPG, JPEG).
                 </small>
             </div>
-            <button type="submit" class="btn btn-primary">
+            <hr>
+            <h4 class="text-features">Features</h4>
+            <div class="row">
+                <% features.forEach((item, index) => { %>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label><%= item.name %></label>
+                            <input
+                                type="hidden"
+                                name="features[<%= index %>][id]"
+                                value="<%= item.id %>"
+                            >
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="features[<%= index %>][quantity]"
+                                placeholder="Enter quantity"
+                            >
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">
                 Save
             </button>
         </form>

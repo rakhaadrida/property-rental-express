@@ -1,6 +1,8 @@
 const Category = require("../../models/category.model");
+const Feature = require("../../models/feature.model");
 const Property = require("../../models/property.model");
 const PropertyImage = require("../../models/property-image.model");
+const PropertyFeature = require("../../models/property-feature.model");
 const fs = require("fs/promises");
 const path = require("path");
 
@@ -11,7 +13,8 @@ module.exports = {
                 .populate("categoryId", "name")
                 .populate("propertyImageIds", "url");
 
-            const category = await Category.find();
+            const categories = await Category.find();
+            const features = await Feature.find();
 
             const alertMessage = req.flash("alertMessage");
             const alertStatus = req.flash("alertStatus");
@@ -20,7 +23,8 @@ module.exports = {
             res.render("admin/property/property", {
                 title: "Isakha Rentals | Property",
                 property,
-                category,
+                categories,
+                features,
                 alert,
             });
         } catch (error) {
@@ -33,7 +37,8 @@ module.exports = {
 
     createProperty: async (req, res) => {
         try {
-            const { name, price, city, categoryId, description } = req.body;
+            const { name, price, city, categoryId, description, features } =
+                req.body;
 
             const property = await Property.create({
                 name,
@@ -65,6 +70,18 @@ module.exports = {
                 await category.save();
             }
 
+            const propertyFeatures = features
+                .filter((item) => item.quantity?.trim())
+                .map((item) => ({
+                    property: property._id,
+                    feature: item.id,
+                    quantity: item.quantity,
+                }));
+
+            if (propertyFeatures.length) {
+                await PropertyFeature.insertMany(propertyFeatures);
+            }
+
             req.flash("alertMessage", "Success Add Property");
             req.flash("alertStatus", "success");
 
@@ -83,7 +100,24 @@ module.exports = {
                 "categoryId",
                 "name",
             );
-            const category = await Category.find();
+            const categories = await Category.find();
+            const features = await Feature.find().lean();
+
+            const propertyFeatures = await PropertyFeature.find({
+                property: req.params.id,
+            }).lean();
+
+            const featureMap = new Map(
+                propertyFeatures.map((item) => [
+                    item.feature.toString(),
+                    item.quantity,
+                ]),
+            );
+
+            const featureList = features.map((feature) => ({
+                ...feature,
+                quantity: featureMap.get(feature._id.toString()) ?? "",
+            }));
 
             const alertMessage = req.flash("alertMessage");
             const alertStatus = req.flash("alertStatus");
@@ -92,7 +126,8 @@ module.exports = {
             res.render("admin/property/edit", {
                 title: "Isakha Rentals | Edit Property",
                 property,
-                category,
+                categories,
+                features: featureList,
                 alert,
             });
         } catch (error) {
