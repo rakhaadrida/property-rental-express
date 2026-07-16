@@ -23,6 +23,13 @@ router.delete("/banks/:id", bankController.deleteBank);
 router.get("/properties", propertyController.property);
 router.post("/properties", uploadMultiple, propertyController.createProperty);
 router.get("/properties/images/:id", propertyController.showImage);
+router.get("/properties/:id", propertyController.editProperty);
+router.put(
+    "/properties/:id",
+    uploadMultiple,
+    propertyController.updateProperty,
+);
+router.delete("/properties/:id", propertyController.deleteProperty);
 
 router.get("/bookings", bookingController.booking);
 

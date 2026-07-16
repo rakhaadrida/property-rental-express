@@ -1,6 +1,8 @@
 const Category = require("../../models/category.model");
 const Property = require("../../models/property.model");
 const PropertyImage = require("../../models/property-image.model");
+const fs = require("fs/promises");
+const path = require("path");
 
 module.exports = {
     property: async (req, res) => {
@@ -64,6 +66,169 @@ module.exports = {
             }
 
             req.flash("alertMessage", "Success Add Property");
+            req.flash("alertStatus", "success");
+
+            res.redirect("/admin/properties");
+        } catch (error) {
+            req.flash("alertMessage", `${error.message}`);
+            req.flash("alertStatus", "danger");
+
+            res.redirect("/admin/properties");
+        }
+    },
+
+    editProperty: async (req, res) => {
+        try {
+            const property = await Property.findById(req.params.id).populate(
+                "categoryId",
+                "name",
+            );
+            const category = await Category.find();
+
+            const alertMessage = req.flash("alertMessage");
+            const alertStatus = req.flash("alertStatus");
+            const alert = { message: alertMessage, status: alertStatus };
+
+            res.render("admin/property/edit", {
+                title: "Isakha Rentals | Edit Property",
+                property,
+                category,
+                alert,
+            });
+        } catch (error) {
+            req.flash("alertMessage", `${error.message}`);
+            req.flash("alertStatus", "danger");
+
+            res.redirect("/admin/properties");
+        }
+    },
+
+    updateProperty: async (req, res) => {
+        try {
+            const { name, price, city, categoryId, description } = req.body;
+            const property = await Property.findById(req.params.id)
+                .populate("categoryId", "name")
+                .populate("propertyImageIds", "url");
+
+            if (!property) {
+                req.flash("alertMessage", "Property not found");
+                req.flash("alertStatus", "danger");
+
+                return res.redirect("/admin/properties");
+            }
+
+            const oldCategoryId = property.categoryId._id;
+            const oldPropertyImages = property.propertyImageIds.slice();
+
+            if (req.files.length > 0) {
+                const newPropertyImages = [];
+
+                await Promise.all(
+                    req.files.map(async (file) => {
+                        const image = await PropertyImage.create({
+                            url: `images/${file.filename}`,
+                        });
+
+                        newPropertyImages.push(image._id);
+                    }),
+                );
+
+                property.propertyImageIds = newPropertyImages;
+                await property.save();
+            }
+
+            property.name = name;
+            property.price = price;
+            property.city = city;
+            property.categoryId = categoryId;
+            property.description = description;
+
+            await property.save();
+
+            if (req.files.length > 0 && oldPropertyImages.length > 0) {
+                try {
+                    await Promise.all(
+                        oldPropertyImages.map(async (image) => {
+                            const imagePath = path.join("public", image.url);
+
+                            await fs.unlink(imagePath);
+                        }),
+                    );
+                } catch (err) {
+                    if (err.code !== "ENOENT") {
+                        console.error(err);
+                    }
+                }
+            }
+
+            if (oldCategoryId !== categoryId) {
+                await Category.findByIdAndUpdate(oldCategoryId, {
+                    $pull: {
+                        propertyIds: property._id,
+                    },
+                });
+
+                await Category.findByIdAndUpdate(categoryId, {
+                    $addToSet: {
+                        propertyIds: property._id,
+                    },
+                });
+            }
+
+            req.flash("alertMessage", "Success Update Property");
+            req.flash("alertStatus", "success");
+
+            res.redirect("/admin/properties");
+        } catch (error) {
+            req.flash("alertMessage", `${error.message}`);
+            req.flash("alertStatus", "danger");
+
+            res.redirect("/admin/properties");
+        }
+    },
+
+    deleteProperty: async (req, res) => {
+        try {
+            const property = await Property.findById(req.params.id)
+                .populate("categoryId", "name")
+                .populate("propertyImageIds", "url");
+
+            if (!property) {
+                req.flash("alertMessage", "Property not found");
+                req.flash("alertStatus", "danger");
+
+                return res.redirect("/admin/properties");
+            }
+
+            await Category.findByIdAndUpdate(property.categoryId._id, {
+                $pull: {
+                    propertyIds: property._id,
+                },
+            });
+
+            if (property.propertyImageIds.length > 0) {
+                await Promise.all(
+                    property.propertyImageIds.map(async (image) => {
+                        try {
+                            await fs.unlink(path.join("public", image.url));
+                        } catch (err) {
+                            if (err.code !== "ENOENT") {
+                                throw err;
+                            }
+                        }
+                    }),
+                );
+
+                await PropertyImage.deleteMany({
+                    _id: {
+                        $in: property.propertyImageIds.map((img) => img._id),
+                    },
+                });
+            }
+
+            await property.deleteOne();
+
+            req.flash("alertMessage", "Success Delete Property");
             req.flash("alertStatus", "success");
 
             res.redirect("/admin/properties");

@@ -28,20 +28,10 @@
                             <td><%= item.city %></td>
                             <td><%= item.isPopular ? `Yes` : `No` %></td>
                             <td>
-                                <button 
-                                    type="button" 
-                                    data-toggle="modal" 
-                                    data-target="#editBankModal"
-                                    data-id="<%= item._id %>"
-                                    data-name="<%= item.name %>" 
-                                    data-account-name="<%= item.accountName %>" 
-                                    data-account-number="<%= item.accountNumber %>" 
-                                    class="btn btn-sm btn-info"
-                                    id="editBankButton"
-                                >
+                                <a href="/admin/properties/<%= item._id %>" class="btn btn-sm btn-info">
                                     Edit
-                                </button>
-                                <form action="/admin/banks/<%= item._id %>?_method=DELETE" method="POST" style="display: inline;">
+                                </a>
+                                <form action="/admin/properties/<%= item._id %>?_method=DELETE" method="POST" style="display: inline;">
                                     <button type="submit" class="btn btn-sm btn-danger">
                                         Delete
                                     </button>
