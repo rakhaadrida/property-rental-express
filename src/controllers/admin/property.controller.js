@@ -140,7 +140,8 @@ module.exports = {
 
     updateProperty: async (req, res) => {
         try {
-            const { name, price, city, categoryId, description } = req.body;
+            const { name, price, city, categoryId, description, features } =
+                req.body;
             const property = await Property.findById(req.params.id)
                 .populate("categoryId", "name")
                 .populate("propertyImageIds", "url");
@@ -210,6 +211,23 @@ module.exports = {
                 });
             }
 
+            await PropertyFeature.deleteMany({
+                property: property._id,
+            });
+
+            console.log(features);
+            const propertyFeatures = features
+                .filter((item) => item.quantity?.trim())
+                .map((item) => ({
+                    property: property._id,
+                    feature: item.id,
+                    quantity: item.quantity,
+                }));
+
+            if (propertyFeatures.length) {
+                await PropertyFeature.insertMany(propertyFeatures);
+            }
+
             req.flash("alertMessage", "Success Update Property");
             req.flash("alertStatus", "success");
 
@@ -261,36 +279,16 @@ module.exports = {
                 });
             }
 
+            await PropertyFeature.deleteMany({
+                property: property._id,
+            });
+
             await property.deleteOne();
 
             req.flash("alertMessage", "Success Delete Property");
             req.flash("alertStatus", "success");
 
             res.redirect("/admin/properties");
-        } catch (error) {
-            req.flash("alertMessage", `${error.message}`);
-            req.flash("alertStatus", "danger");
-
-            res.redirect("/admin/properties");
-        }
-    },
-
-    showProperty: async (req, res) => {
-        try {
-            const property = await Property.findById(req.params.id).populate(
-                "categoryId",
-                "name",
-            );
-
-            const alertMessage = req.flash("alertMessage");
-            const alertStatus = req.flash("alertStatus");
-            const alert = { message: alertMessage, status: alertStatus };
-
-            res.render("admin/property/edit", {
-                title: "Isakha Rentals | Detail Property",
-                property,
-                alert,
-            });
         } catch (error) {
             req.flash("alertMessage", `${error.message}`);
             req.flash("alertStatus", "danger");

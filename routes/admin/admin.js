@@ -39,7 +39,6 @@ router.put(
     propertyController.updateProperty,
 );
 router.delete("/properties/:id", propertyController.deleteProperty);
-router.get("/properties/show/:id", propertyController.showProperty);
 router.get("/properties/images/:id", propertyController.showImage);
 
 router.get("/bookings", bookingController.booking);
