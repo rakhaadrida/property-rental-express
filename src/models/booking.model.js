@@ -10,7 +10,7 @@ const bookingSchema = new Schema({
         type: Date,
         required: true,
     },
-    propertyIds: {
+    propertyId: {
         _id: {
             type: Schema.Types.ObjectId,
             ref: "Property",

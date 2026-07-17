@@ -57,5 +57,8 @@ router.delete("/properties/:id", propertyController.deleteProperty);
 router.get("/properties/images/:id", propertyController.showImage);
 
 router.get("/bookings", bookingController.booking);
+router.get("/bookings/:id", bookingController.showBooking);
+router.post("/bookings/:id/approve", bookingController.approveBooking);
+router.post("/bookings/:id/reject", bookingController.rejectBooking);
 
 module.exports = router;

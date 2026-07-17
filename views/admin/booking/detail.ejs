@@ -1,0 +1,125 @@
+<h1 class="h3 mb-4 text-gray-800">Detail Booking - <%= booking.invoice %></h1>
+
+<%- include('../partials/alert.ejs') %>
+
+<div class="card shadow mb-4">
+    <div class="card-body mt-2">
+        <div class="row">
+            <div class="col-md-8">
+                <h4 class="text-features mt-2 mb-4 pl-4">
+                    Booking Information
+                </h4>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3"
+                        >Invoice Number</label
+                    >
+                    <span class="col-auto form-label">:</span>
+                    <label><%= booking.invoice %></label>
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3">Customer</label>
+                    <span class="col-auto form-label">:</span>
+                    <label
+                        ><%= booking.customerId.firstName %> <%=
+                        booking.customerId.lastName %></label
+                    >
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3">Date</label>
+                    <span class="col-auto form-label">:</span>
+                    <label
+                        ><%=
+                        Intl.DateTimeFormat("id-ID").format(booking.startDate)
+                        %> - <%=
+                        Intl.DateTimeFormat("id-ID").format(booking.endDate)
+                        %></label
+                    >
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3"
+                        >Property Name</label
+                    >
+                    <span class="col-auto form-label">:</span>
+                    <label><%= booking.propertyId.name %></label>
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3">Price</label>
+                    <span class="col-auto form-label">:</span>
+                    <label>$ <%= booking.propertyId.price %></label>
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3">Duration</label>
+                    <span class="col-auto form-label">:</span>
+                    <label><%= booking.propertyId.duration %> Night(s)</label>
+                </div>
+                <hr />
+                <h4 class="text-features mb-4 pl-4">Payment Information</h4>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3"
+                        >Selected Bank</label
+                    >
+                    <span class="col-auto form-label">:</span>
+                    <label><%= booking.bankId.name %></label>
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3">Total</label>
+                    <span class="col-auto form-label">:</span>
+                    <label>$ <%= booking.total %></label>
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3"
+                        >Source Bank</label
+                    >
+                    <span class="col-auto form-label">:</span>
+                    <label><%= booking.payment.sourceBank %></label>
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3"
+                        >Account Holder</label
+                    >
+                    <span class="col-auto form-label">:</span>
+                    <label><%= booking.payment.sourceBankHolder %></label>
+                </div>
+                <div class="form-group row px-3">
+                    <label class="form-label text-right col-3">Status</label>
+                    <span class="col-auto form-label">:</span>
+                    <label><%= booking.payment.status %></label>
+                </div>
+                <div class="row justify-content-center">
+                    <% if(booking.payment.status == "Pending") { %>
+                        <form
+                            action="/admin/bookings/<%= booking._id %>/Approve"
+                            method="POST"
+                        >
+                            <button type="submit" class="btn btn-success mt-2 ml-5">
+                                Approve
+                            </button>
+                        </form>
+                        <form
+                            action="/admin/bookings/<%= booking._id %>/reject"
+                            method="POST"
+                        >
+                            <button type="submit" class="btn btn-danger mt-2 ml-2">
+                                Reject
+                            </button>
+                        </form>
+                    <% } %>
+                    <a
+                        href="/admin/bookings"
+                        class="btn btn-outline-primary mt-2 ml-2"
+                    >
+                        Back to List
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <img
+                    src="/<%= booking.payment.proofOfPayment %>"
+                    alt="<%= booking.payment.proofOfPayment %> Image"
+                    style="width: 100%; height: auto"
+                    class="mt-4"
+                />
+            </div>
+        </div>
+    </div>
+</div>
