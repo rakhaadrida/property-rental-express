@@ -31,6 +31,9 @@ app.use(
     }),
 );
 
+const userMiddleware = require("./src/middlewares/view");
+app.use(userMiddleware);
+
 app.use(flash());
 app.use(logger("dev"));
 app.use(express.json());

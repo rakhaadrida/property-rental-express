@@ -4,9 +4,7 @@ const bcrypt = require("bcryptjs");
 module.exports = {
     showLogin: async (req, res) => {
         try {
-            const alertMessage = req.flash("alertMessage");
-            const alertStatus = req.flash("alertStatus");
-            const alert = { message: alertMessage, status: alertStatus };
+            const alert = {};
 
             res.render("index", {
                 title: "Isakha Rentals | Login",
@@ -54,5 +52,11 @@ module.exports = {
 
             res.redirect("/admin/login");
         }
+    },
+
+    logout: async (req, res) => {
+        req.session.destroy();
+
+        res.redirect("admin/login");
     },
 };
