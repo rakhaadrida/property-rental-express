@@ -46,6 +46,14 @@ const uploadIcon = multer({
     },
 }).single("icon");
 
+const uploadImage = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 },
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    },
+}).single("image");
+
 function checkFileType(file, cb) {
     const fileTypes = /jpeg|jpg|png|gif|svg/;
     const extName = fileTypes.test(
@@ -60,4 +68,4 @@ function checkFileType(file, cb) {
     }
 }
 
-module.exports = { uploadMultiple, upload, uploadIcon };
+module.exports = { uploadMultiple, upload, uploadIcon, uploadImage };

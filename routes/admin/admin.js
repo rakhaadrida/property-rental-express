@@ -4,12 +4,14 @@ const {
     uploadMultiple,
     upload,
     uploadIcon,
+    uploadImage,
 } = require("../../src/middlewares/multer");
 
 const dashboardController = require("../../src/controllers/admin/dashboard.controller");
 const bankController = require("../../src/controllers/admin/bank.controller");
 const categoryController = require("../../src/controllers/admin/category.controller");
 const featureController = require("../../src/controllers/admin/feature.controller");
+const activityController = require("../../src/controllers/admin/activity.controller");
 const propertyController = require("../../src/controllers/admin/property.controller");
 const bookingController = require("../../src/controllers/admin/booking.controller");
 
@@ -29,6 +31,11 @@ router.get("/features", featureController.feature);
 router.post("/features", uploadIcon, featureController.createFeature);
 router.put("/features/:id", uploadIcon, featureController.updateFeature);
 router.delete("/features/:id", featureController.deleteFeature);
+
+router.get("/activities", activityController.activity);
+router.post("/activities", uploadImage, activityController.createActivity);
+router.put("/activities/:id", uploadImage, activityController.updateActivity);
+router.delete("/activities/:id", activityController.deleteActivity);
 
 router.get("/properties", propertyController.property);
 router.post("/properties", uploadMultiple, propertyController.createProperty);

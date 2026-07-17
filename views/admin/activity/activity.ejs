@@ -1,0 +1,249 @@
+<h1 class="h3 mb-4 text-gray-800">Master Data Activity</h1>
+
+<%- include('../partials/alert.ejs') %>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <button
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#addActivityModal"
+        >
+            Add New Activity
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table
+                class="table table-bordered"
+                id="dataTable"
+                width="100%"
+                cellspacing="0"
+            >
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Image</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% activity.forEach((item, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= item.name %></td>
+                            <td><%= item.type %></td>
+                            <td>
+                                <% if (item.imageUrl) { %>
+                                    <img
+                                        src="/<%= item.imageUrl %>"
+                                        alt="<%= item.name %> Image"
+                                        style="width: 80px; height: auto;"
+                                    />
+                                <% } else { %>
+                                    No Image
+                                <% } %>
+                            </td>
+                            <td>
+                                <button 
+                                    type="button" 
+                                    data-toggle="modal" 
+                                    data-target="#editActivityModal"
+                                    data-id="<%= item._id %>"
+                                    data-name="<%= item.name %>"
+                                    data-type="<%= item.type %>"
+                                    class="btn btn-sm btn-info"
+                                    id="editActivityButton"
+                                >
+                                    Edit
+                                </button>
+                                <form action="/admin/activities/<%= item._id %>?_method=DELETE" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="addActivityModal"
+        tabindex="-1"
+        aria-labelledby="addActivityModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addActivityModalLabel">
+                        Add New Activity
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form
+                    action="/admin/activities"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                placeholder="Enter the name here."
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Type</label>
+                            <select class="form-control" id="type" name="type" required>
+                                <% activityType.forEach(item => { %>
+                                    <option value="<%= item.value %>">
+                                        <%= item.label %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image</label>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="image"
+                                name="image"
+                                aria-describedby="imageHelp"
+                                required
+                            />
+                            <small id="imageHelp" class="form-text text-muted">
+                                Upload the image here (PNG, JPG, JPEG).
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="editActivityModal"
+        tabindex="-1"
+        aria-labelledby="editActivityModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editActivityModalLabel">
+                        Edit Activity
+                    </h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                placeholder="Enter the name here."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Type</label>
+                            <select class="form-control" id="type" name="type" required>
+                                <% activityType.forEach(item => { %>
+                                    <option value="<%= item.value %>">
+                                        <%= item.label %>
+                                    </option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image</label>
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="image"
+                                name="image"
+                                aria-describedby="imageHelp"
+                                required
+                            />
+                            <small id="imageHelp" class="form-text text-muted">
+                                Upload the image here (PNG, JPG, JPEG).
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Save changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/script.ejs') %>
+
+<script>
+    $('#dataTable').on('click', '#editActivityButton', function () {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+        const type = $(this).data('type');
+
+        $('#editActivityModal #name').val(name);
+        $('#editActivityModal #type').val(type);
+        $('#editActivityModal form').attr('action', `/admin/activities/${id}?_method=PUT`);
+    });
+</script>
