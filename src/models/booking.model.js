@@ -10,54 +10,56 @@ const bookingSchema = new Schema({
         type: Date,
         required: true,
     },
-    propertyIds: [
-        {
-            _id: {
-                type: Schema.Types.ObjectId,
-                ref: "Property",
-                required: true,
-            },
-            price: {
-                type: Number,
-                required: true,
-            },
-            duration: {
-                type: Number,
-                required: true,
-            },
-        },
-    ],
-    customerIds: [
-        {
+    propertyIds: {
+        _id: {
             type: Schema.Types.ObjectId,
-            ref: "Customer",
+            ref: "Property",
+            required: true,
         },
-    ],
-    bankIds: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "Bank",
+        name: {
+            type: String,
+            required: true,
         },
-    ],
-    proofOfPayment: {
-        type: String,
-        required: true,
+        price: {
+            type: Number,
+            required: true,
+        },
+        duration: {
+            type: Number,
+            required: true,
+        },
     },
-    sourceBank: {
-        type: String,
-        required: true,
+    invoice: {
+        type: Number,
     },
-    sourceBank: {
-        type: String,
-        required: true,
+    total: {
+        type: Number,
     },
-    sourceBankHolder: {
-        type: String,
-        required: true,
+    customerId: {
+        type: Schema.Types.ObjectId,
+        ref: "Customer",
     },
-    status: {
-        type: String,
-        required: true,
+    bankId: {
+        type: Schema.Types.ObjectId,
+        ref: "Bank",
+    },
+    payment: {
+        proofOfPayment: {
+            type: String,
+            required: true,
+        },
+        sourceBank: {
+            type: String,
+            required: true,
+        },
+        sourceBankHolder: {
+            type: String,
+            required: true,
+        },
+        status: {
+            type: String,
+            required: true,
+        },
     },
 });
 

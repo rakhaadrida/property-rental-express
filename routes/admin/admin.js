@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { authenticate, isGuest } = require("../../src/middlewares/auth");
 const {
     uploadMultiple,
     upload,
@@ -7,6 +8,7 @@ const {
     uploadImage,
 } = require("../../src/middlewares/multer");
 
+const authController = require("../../src/controllers/admin/auth.controller");
 const dashboardController = require("../../src/controllers/admin/dashboard.controller");
 const bankController = require("../../src/controllers/admin/bank.controller");
 const categoryController = require("../../src/controllers/admin/category.controller");
@@ -14,6 +16,11 @@ const featureController = require("../../src/controllers/admin/feature.controlle
 const activityController = require("../../src/controllers/admin/activity.controller");
 const propertyController = require("../../src/controllers/admin/property.controller");
 const bookingController = require("../../src/controllers/admin/booking.controller");
+
+router.get("/login", isGuest, authController.showLogin);
+router.post("/login", isGuest, authController.login);
+
+router.use(authenticate);
 
 router.get("/dashboard", dashboardController.dashboard);
 
