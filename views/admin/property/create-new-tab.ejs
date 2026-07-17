@@ -92,6 +92,28 @@
                     </div>
                 <% }) %>
             </div>
+            <hr>
+            <h4 class="text-features">Activity</h4>
+            <div class="form-group">
+                <select
+                    id="activityIds"
+                    name="activityIds[]"
+                    class="form-control"
+                    multiple
+                >
+                    <% activities.forEach(item => { %>
+
+                        <option
+                            value="<%= item._id %>"
+                            data-image="<%= item.imageUrl %>"
+                            data-type="<%= activityTypeMap[item.type] %>"
+                        >
+                            <%= item.name %>
+                        </option>
+
+                    <% }) %>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary mt-3">
                 Save
             </button>

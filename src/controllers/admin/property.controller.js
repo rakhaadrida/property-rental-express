@@ -1,8 +1,10 @@
 const Category = require("../../models/category.model");
 const Feature = require("../../models/feature.model");
+const Activity = require("../../models/activity.model");
 const Property = require("../../models/property.model");
 const PropertyImage = require("../../models/property-image.model");
 const PropertyFeature = require("../../models/property-feature.model");
+const Constant = require("../../constants/constant");
 const fs = require("fs/promises");
 const path = require("path");
 
@@ -15,6 +17,14 @@ module.exports = {
 
             const categories = await Category.find();
             const features = await Feature.find();
+            const activities = await Activity.find();
+
+            const activityTypeMap = Object.values(
+                Constant.ACTIVITY_TYPE,
+            ).reduce((acc, item) => {
+                acc[item.value] = item.label;
+                return acc;
+            }, {});
 
             const alertMessage = req.flash("alertMessage");
             const alertStatus = req.flash("alertStatus");
@@ -25,6 +35,8 @@ module.exports = {
                 property,
                 categories,
                 features,
+                activities,
+                activityTypeMap,
                 alert,
             });
         } catch (error) {
@@ -37,8 +49,15 @@ module.exports = {
 
     createProperty: async (req, res) => {
         try {
-            const { name, price, city, categoryId, description, features } =
-                req.body;
+            const {
+                name,
+                price,
+                city,
+                categoryId,
+                description,
+                features,
+                activityIds,
+            } = req.body;
 
             const property = await Property.create({
                 name,
@@ -46,6 +65,7 @@ module.exports = {
                 city,
                 categoryId,
                 description,
+                activityIds,
             });
 
             if (req.files.length > 0) {
@@ -96,12 +116,24 @@ module.exports = {
 
     editProperty: async (req, res) => {
         try {
-            const property = await Property.findById(req.params.id).populate(
-                "categoryId",
-                "name",
-            );
+            const property = await Property.findById(req.params.id)
+                .populate("categoryId", "name")
+                .populate("activityIds");
+
             const categories = await Category.find();
             const features = await Feature.find().lean();
+            const activities = await Activity.find();
+
+            const activityTypeMap = Object.values(
+                Constant.ACTIVITY_TYPE,
+            ).reduce((acc, item) => {
+                acc[item.value] = item.label;
+                return acc;
+            }, {});
+
+            const selectedActivityIds = property.activityIds.map((activity) =>
+                activity._id.toString(),
+            );
 
             const propertyFeatures = await PropertyFeature.find({
                 property: req.params.id,
@@ -128,6 +160,9 @@ module.exports = {
                 property,
                 categories,
                 features: featureList,
+                activities,
+                activityTypeMap,
+                selectedActivityIds,
                 alert,
             });
         } catch (error) {
@@ -140,8 +175,15 @@ module.exports = {
 
     updateProperty: async (req, res) => {
         try {
-            const { name, price, city, categoryId, description, features } =
-                req.body;
+            const {
+                name,
+                price,
+                city,
+                categoryId,
+                description,
+                features,
+                activityIds,
+            } = req.body;
             const property = await Property.findById(req.params.id)
                 .populate("categoryId", "name")
                 .populate("propertyImageIds", "url");
@@ -178,6 +220,7 @@ module.exports = {
             property.city = city;
             property.categoryId = categoryId;
             property.description = description;
+            property.activityIds = activityIds;
 
             await property.save();
 

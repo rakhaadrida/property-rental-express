@@ -104,6 +104,29 @@
                     </div>
                 <% }) %>
             </div>
+            <hr>
+            <h4 class="text-features">Activity</h4>
+            <div class="form-group">
+                <select
+                    id="activityIds"
+                    name="activityIds[]"
+                    class="form-control"
+                    multiple
+                >
+                    <% activities.forEach(item => { %>
+
+                        <option
+                            value="<%= item._id %>"
+                            data-image="<%= item.imageUrl %>"
+                            data-type="<%= activityTypeMap[item.type] %>"
+                            <%= selectedActivityIds.includes(item._id.toString()) ? 'selected' : '' %>
+                        >
+                            <%= item.name %>
+                        </option>
+
+                    <% }) %>
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary mt-3">
                 Update
             </button>
@@ -115,4 +138,51 @@
 
 <script>
     CKEDITOR.replace("description");
+
+    $("#activityIds").select2({
+        placeholder: "Select Activity",
+        templateResult: formatActivity,
+        templateSelection: formatSelection,
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+    });
+
+    function formatActivity(option) {
+        if (!option.id) {
+            return option.text;
+        }
+
+        const image = $(option.element).data("image");
+        const type = $(option.element).data("type");
+
+        return $(`
+            <div class="d-flex align-items-center">
+                <img
+                    src="/${image}"
+                    style="
+                        width:40px;
+                        height:40px;
+                        object-fit:cover;
+                        border-radius:5px;
+                        margin-right:10px;
+                    "
+                >
+                <div>
+                    <div>${option.text}</div>
+                    <small class="text-muted">
+                        ${type}
+                    </small>
+                </div>
+            </div>
+        `);
+    }
+
+    function formatSelection(option) {
+        if (!option.id) {
+            return option.text;
+        }
+
+        return $("<span>" + option.text + "</span>");
+    }
 </script>
