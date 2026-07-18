@@ -14,6 +14,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/property-rental");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const adminRouter = require("./routes/admin/admin");
+const apiRouter = require("./routes/api/api");
 
 var app = express();
 
@@ -54,6 +55,7 @@ app.use(
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/admin", adminRouter);
+app.use("/api", apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

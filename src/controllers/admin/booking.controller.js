@@ -6,8 +6,7 @@ module.exports = {
         try {
             const booking = await Booking.find()
                 .populate("propertyId")
-                .populate("customerId")
-                .populate("bankId");
+                .populate("customerId");
 
             const alertMessage = req.flash("alertMessage");
             const alertStatus = req.flash("alertStatus");
@@ -31,8 +30,7 @@ module.exports = {
         try {
             const booking = await Booking.findById(req.params.id)
                 .populate("propertyId")
-                .populate("customerId")
-                .populate("bankId");
+                .populate("customerId");
 
             if (!booking) {
                 req.flash("alertMessage", "Booking not found");

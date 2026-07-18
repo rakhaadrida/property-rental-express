@@ -10,7 +10,7 @@ const propertyFeatureSchema = new Schema({
 
     feature: {
         type: Schema.Types.ObjectId,
-        ref: "Category",
+        ref: "Feature",
         required: true,
     },
 

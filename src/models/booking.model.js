@@ -38,10 +38,7 @@ const bookingSchema = new Schema({
     customerId: {
         type: Schema.Types.ObjectId,
         ref: "Customer",
-    },
-    bankId: {
-        type: Schema.Types.ObjectId,
-        ref: "Bank",
+        required: true,
     },
     payment: {
         proofOfPayment: {
@@ -58,7 +55,7 @@ const bookingSchema = new Schema({
         },
         status: {
             type: String,
-            required: true,
+            default: "Pending",
         },
     },
 });

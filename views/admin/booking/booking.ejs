@@ -17,7 +17,6 @@
                         <th>Date</th>
                         <th>Property Name</th>
                         <th>Customer</th>
-                        <th>Bank</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -31,7 +30,6 @@
                             </td>
                             <td><%= item.propertyId.name %></td>
                             <td><%= item.customerId.firstName %> <%= item.customerId.lastName %></td>
-                            <td><%= item.bankId.name %></td>
                             <td><%= item.payment.status %></td>
                             <td>
                                 <a href="/admin/bookings/<%= item._id %>" class="btn btn-sm btn-success">
