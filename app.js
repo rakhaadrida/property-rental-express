@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -9,7 +11,14 @@ const session = require("express-session");
 const flash = require("connect-flash");
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/property-rental");
+mongoose
+    .connect(process.env.MONGODB_URI)
+    .then(() => {
+        console.log("MongoDB connected");
+    })
+    .catch((err) => {
+        console.error("MongoDB connection error:", err);
+    });
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -17,6 +26,9 @@ const adminRouter = require("./routes/admin/admin");
 const apiRouter = require("./routes/api/api");
 
 var app = express();
+if (process.env.NODE_ENV === "production") {
+    app.set("trust proxy", 1);
+}
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -25,10 +37,14 @@ app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
 app.use(
     session({
-        secret: "keyboard cat",
+        secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: true,
-        cookie: { maxAge: 60000 },
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 60000,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+        },
     }),
 );
 
