@@ -24,6 +24,7 @@ mongoose
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const adminRouter = require("./routes/admin/admin");
+const apiRouter = require("./routes/api/api");
 
 var app = express();
 
@@ -32,8 +33,6 @@ app.use(
         origin: "http://localhost:5173",
     }),
 );
-
-const apiRouter = require("./routes/api/api");
 
 if (process.env.NODE_ENV === "production") {
     app.set("trust proxy", 1);
@@ -63,7 +62,7 @@ app.use(userMiddleware);
 app.use(flash());
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(expressLayouts);
 app.set("layout", "admin/layouts/admin");
