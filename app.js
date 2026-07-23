@@ -2,6 +2,7 @@ require("dotenv").config();
 
 var createError = require("http-errors");
 var express = require("express");
+const cors = require("cors");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
@@ -23,9 +24,17 @@ mongoose
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const adminRouter = require("./routes/admin/admin");
-const apiRouter = require("./routes/api/api");
 
 var app = express();
+
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+    }),
+);
+
+const apiRouter = require("./routes/api/api");
+
 if (process.env.NODE_ENV === "production") {
     app.set("trust proxy", 1);
 }
