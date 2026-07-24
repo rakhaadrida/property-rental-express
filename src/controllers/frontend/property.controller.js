@@ -9,7 +9,8 @@ module.exports = {
                 .populate({
                     path: "propertyImageIds",
                     perDocumentLimit: 1,
-                });
+                })
+                .perDocumentLimit(5);
 
             res.status(200).json({ data: properties });
         } catch (error) {
