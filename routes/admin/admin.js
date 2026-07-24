@@ -20,7 +20,7 @@ const bookingController = require("../../src/controllers/admin/booking.controlle
 router.get("/login", isGuest, authController.showLogin);
 router.post("/login", isGuest, authController.login);
 
-router.use(authenticate);
+// router.use(authenticate);
 router.get("/logout", authController.logout);
 
 router.get("/dashboard", dashboardController.dashboard);
